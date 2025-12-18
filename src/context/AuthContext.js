@@ -1,36 +1,47 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, use, useContext, useEffect, useState } from 'react';
+import { signIn, logout, getCurrentUser, getAuthToken } from '../services/authService';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-    // État local pour stocker l'utilisateur (null = non connecté)
+    const [token, setToken] = useState("")
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const user = getCurrentUser();
+        const token = getAuthToken();
+        if (user && token) {
+            setUser(user);
+            setToken(token);
+            setLoading(false);
+        }
+    })
 
     // Fonction de connexion
-    const loginUser = (login, password) => {
-        // Vérification simplifiée : login = "Andre" et password = "secret"
-        if (login === "Andre" && password === "secret") {
-            setUser({ login }); // met à jour l'état avec l'utilisateur connecté
-            return true;        // connexion réussie
-        } else {
-            return false;       // connexion échouée
-        }
+    const loginUser = async (login, password) => {
+        const data = await signIn(login, password);
+        setUser(data.visiteur);
+        setToken(data.access_token);
+        return data;
     };
 
     // Fonction de déconnexion
     const logoutUser = () => {
-        setUser(null); // réinitialise l'état à null
+        logout();
+        setUser(null);
+        setToken(null);
     };
 
     // Valeurs exposées aux composants enfants
     return (
-        <AuthContext.Provider value={{ user, loginUser, logoutUser }}>
+        <AuthContext.Provider value={{ user, token, loading, loginUser, logoutUser }}>
             {children} 
         </AuthContext.Provider>
     );
-}
+};
 
 // Hook personnalisé pour utiliser le contexte facilement
 export function useAuth() {
     return useContext(AuthContext);
-}
+};
