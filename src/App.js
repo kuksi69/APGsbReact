@@ -10,6 +10,7 @@ import FraisEdit from "./pages/FraisEdit";
 import FraisHorsForfait from "./pages/FraisHorsForfait";
 import FraisHorsForfaitAdd from "./pages/FraisHorsForfaitAdd";
 import FraisHorsForfaitEdit from "./pages/FraisHorsForfaitEdit";
+import RechercheMedic from "./components/MedicamentSearch";
 
 function App() {
   return (
@@ -63,6 +64,14 @@ function App() {
                 <FraisAdd />
               </PrivateRoute>
             } 
+          />
+          <Route
+          path="recherche"
+          element={
+            <PrivateRoute>
+              <RechercheMedic />
+            </PrivateRoute>
+          }
           />
         </Routes>
       </Router>

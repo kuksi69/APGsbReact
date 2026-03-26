@@ -18,6 +18,7 @@ function Navbar() {
                 <Link to="/">Accueil</Link>
                 {user && <Link to="/dashboard">Tableau de bord</Link>} {/* conditionnel */}
                 {user && <Link to="/ajouter">Saisir une node de frais</Link>}
+                {user && <Link to="/recherche">Recherche Medicament</Link>}
             </div>
 
             <div className="navbar-right">
